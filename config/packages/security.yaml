@@ -1,0 +1,35 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        app:
+            entity:
+                class: App\Entity\User
+                property: username
+    encoders:
+        App\Entity\User:
+            algorithm: argon2i
+            memory_cost: 1024
+            time_cost: 2
+            threads: 2
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: true
+            guard:
+                authenticators:
+                    - App\Security\AppUserAuthenticator
+            logout:
+                path:  logout
+                target: home
+
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/efconnect, role: ROLE_ADMIN }
+        - { path: ^/elfinder, role: ROLE_ADMIN }
+
+    role_hierarchy:
+      ROLE_ADMIN: ~

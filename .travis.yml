@@ -1,0 +1,33 @@
+dist: xenial
+
+language: php
+
+addons:
+  chrome: stable
+
+services:
+  - mysql
+  - elasticsearch
+
+sudo: true
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 7.2
+
+install:
+  - printf "\n" | pecl install libsodium
+  - composer install --prefer-dist
+
+before_install:
+  - sudo add-apt-repository ppa:ondrej/php -y
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libsodium-dev
+
+script:
+  - vendor/bin/phpstan.phar analyse src --level=5
+  - vendor/bin/php-cs-fixer fix -v --diff --dry-run
+  - yarn
+  - yarn encore dev
+  - vendor/bin/phpunit -c phpunit-ci.xml

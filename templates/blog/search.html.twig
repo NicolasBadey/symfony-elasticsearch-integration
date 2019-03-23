@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Search{% endblock %}
+
+{% block body %}
+    <h1>Search</h1>
+
+    <div class="row">
+        <div class="col-sm-3">{{ form(form) }}</div>
+        <div class="col-sm-9">
+            {%  for article in articles %}
+                <article>
+                    <header><h1 class="mt-5">{{ article._source.title }}</h1></header>
+
+                    <p class="lead">{{ article._source.content }}</p>
+                    <a href="#">link</a>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
